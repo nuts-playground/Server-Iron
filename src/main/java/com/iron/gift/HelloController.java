@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/hello")
 public class HelloController {
 
 	@GetMapping
+	@RequestMapping("/hello")
 	public String hello(@RequestParam(required = false) String param) {
-		return "hello " + param;
+		return "Hello " + param;
 	}
 }
