@@ -1,5 +1,6 @@
 package com.iron.gift.entiry;
 
+import com.iron.gift.response.PostResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,5 +25,13 @@ public class Post {
 	public Post(String title, String content) {
 		this.title = title;
 		this.content = content;
+	}
+
+	public PostResponse toResponse() {
+		return PostResponse.builder()
+				.id(id)
+				.title(title)
+				.content(content)
+				.build();
 	}
 }
