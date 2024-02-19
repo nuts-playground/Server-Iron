@@ -8,6 +8,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -92,31 +96,26 @@ class PostServiceTest {
 	}
 
 	@Test
-	@DisplayName("글 여러개 조회")
-	void getPostListTest() throws Exception {
-		Post post1 = Post.builder()
-				.title("제목입니다1.")
-				.content("내용입니다1.")
-				.build();
-		postRepository.save(post1);
-		Post post2 = Post.builder()
-				.title("제목입니다2.")
-				.content("내용입니다2.")
-				.build();
-		postRepository.save(post2);
+	@DisplayName("글 1페이지 조회")
+	void getPostPageTest() throws Exception {
+		List<Post> requestPosts = IntStream.range(1, 31)
+				.mapToObj(i ->
+						Post.builder()
+								.title("제목 - " + i)
+								.content("내용 - " + i)
+								.build())
+				.collect(Collectors.toList());
 
-		mockMvc.perform(get("/posts")
-						.contentType(APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.length()", Matchers.is(2)))
-				.andExpect(jsonPath("$[0].id").value(post1.getId()))
-				.andExpect(jsonPath("$[0].title").value("제목입니다1."))
-				.andExpect(jsonPath("$[0].content").value("내용입니다1."))
-				.andExpect(jsonPath("$[1].id").value(post2.getId()))
-				.andExpect(jsonPath("$[1].title").value("제목입니다2."))
-				.andExpect(jsonPath("$[1].content").value("내용입니다2."))
-				.andDo(print());
+		postRepository.saveAll(requestPosts);
+
+		PageRequest pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
+
+		List<PostResponse> posts = postService.getList(pageable);
+
+		Assertions.assertEquals(5, posts.size());
+		Assertions.assertEquals("제목 - 1", posts.get(0).getTitle());
+		Assertions.assertEquals("내용 - 1", posts.get(0).getContent());
+
+
 	}
-
-
 }
