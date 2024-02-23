@@ -1,6 +1,7 @@
 package com.iron.gift.controller;
 
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import com.iron.gift.service.PostService;
 import jakarta.validation.Valid;
@@ -31,8 +32,8 @@ public class PostController {
 	}
 
 	@GetMapping("/posts")
-	public List<PostResponse> getList(@PageableDefault(size = 5) Pageable pageable) {
-		return postService.getList(pageable);
+	public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+		return postService.getList(postSearch);
 	}
 }
 

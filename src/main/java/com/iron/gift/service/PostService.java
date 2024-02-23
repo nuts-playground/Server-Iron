@@ -3,6 +3,7 @@ package com.iron.gift.service;
 import com.iron.gift.entiry.Post;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +40,8 @@ public class PostService {
 
 	}
 
-	public List<PostResponse> getList(Pageable pageable) {
-		return postRepository.findAll(pageable).stream()
+	public List<PostResponse> getList(PostSearch postSearch) {
+		return postRepository.getList(postSearch).stream()
 				.map(post -> post.toResponse())
 				.collect(Collectors.toList());
 	}

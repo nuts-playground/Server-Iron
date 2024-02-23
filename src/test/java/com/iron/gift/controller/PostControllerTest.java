@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -110,10 +111,35 @@ public class PostControllerTest {
 
 		postRepository.saveAll(requestPosts);
 
-		mockMvc.perform(get("/posts?page=0&sort=id,desc")
+		mockMvc.perform(get("/posts?page=1&size=10")
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.length()", Matchers.is(5)))
+				.andExpect(jsonPath("$.length()", is(10)))
+				.andExpect(jsonPath("$[0].id").value("30"))
+				.andExpect(jsonPath("$[0].title").value("제목 - 30"))
+				.andExpect(jsonPath("$[0].content").value("내용 - 30"))
+				.andDo(print());
+
+	}
+
+
+	@Test
+	@DisplayName("페이지를 0으로 요청해도 첫 페이지를 가져온다.")
+	void getListDefaultPage() throws Exception {
+		List<Post> requestPosts = IntStream.range(1, 31)
+				.mapToObj(i ->
+						Post.builder()
+								.title("제목 - " + i)
+								.content("내용 - " + i)
+								.build())
+				.collect(Collectors.toList());
+
+		postRepository.saveAll(requestPosts);
+
+		mockMvc.perform(get("/posts?page=0&size=10")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()", is(10)))
 				.andExpect(jsonPath("$[0].id").value("30"))
 				.andExpect(jsonPath("$[0].title").value("제목 - 30"))
 				.andExpect(jsonPath("$[0].content").value("내용 - 30"))

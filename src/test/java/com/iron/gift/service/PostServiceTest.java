@@ -3,6 +3,7 @@ package com.iron.gift.service;
 import com.iron.gift.entiry.Post;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -108,14 +109,14 @@ class PostServiceTest {
 
 		postRepository.saveAll(requestPosts);
 
-		PageRequest pageable = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
+		PostSearch postSearch = PostSearch.builder()
+				.page(1)
+				.build();
 
-		List<PostResponse> posts = postService.getList(pageable);
+		List<PostResponse> posts = postService.getList(postSearch);
 
-		Assertions.assertEquals(5, posts.size());
-		Assertions.assertEquals("제목 - 1", posts.get(0).getTitle());
-		Assertions.assertEquals("내용 - 1", posts.get(0).getContent());
-
-
+		Assertions.assertEquals(10, posts.size());
+		Assertions.assertEquals("제목 - 30", posts.get(0).getTitle());
+		Assertions.assertEquals("내용 - 30", posts.get(0).getContent());
 	}
 }
