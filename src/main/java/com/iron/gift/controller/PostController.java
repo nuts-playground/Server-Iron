@@ -1,12 +1,14 @@
 package com.iron.gift.controller;
 
-import com.iron.gift.entiry.Post;
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import com.iron.gift.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +32,8 @@ public class PostController {
 	}
 
 	@GetMapping("/posts")
-	public List<PostResponse> getList() {
-		return postService.getList();
+	public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+		return postService.getList(postSearch);
 	}
 }
 
