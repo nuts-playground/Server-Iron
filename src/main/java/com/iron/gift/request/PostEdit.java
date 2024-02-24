@@ -1,16 +1,13 @@
 package com.iron.gift.request;
 
-import com.iron.gift.entity.Post;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
-@ToString
-@Setter
 @Getter
-public class PostCreate {
+@ToString
+public class PostEdit {
 
 	@NotBlank(message = "제목은 필수입력입니다.")
 	public String title;
@@ -19,16 +16,8 @@ public class PostCreate {
 	public String content;
 
 	@Builder
-	public PostCreate(String title, String content) {
+	public PostEdit(String title, String content) {
 		this.title = title;
 		this.content = content;
 	}
-
-	public Post toEntity() {
-		return Post.builder()
-				.title(title)
-				.content(content)
-				.build();
-	}
-
 }

@@ -1,14 +1,12 @@
-package com.iron.gift.entiry;
+package com.iron.gift.entity;
 
 import com.iron.gift.response.PostResponse;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Post {
 
@@ -33,5 +31,17 @@ public class Post {
 				.title(title)
 				.content(content)
 				.build();
+	}
+
+	public PostEditor.PostEditorBuilder toEditor() {
+		return PostEditor.builder()
+				.title(title)
+				.content(content);
+	}
+
+	public void edit(PostEditor postEditor) {
+		this.title = postEditor.getTitle();
+		this.content = postEditor.getContent();
+
 	}
 }

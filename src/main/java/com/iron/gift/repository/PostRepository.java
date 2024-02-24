@@ -1,6 +1,6 @@
 package com.iron.gift.repository;
 
-import com.iron.gift.entiry.Post;
+import com.iron.gift.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

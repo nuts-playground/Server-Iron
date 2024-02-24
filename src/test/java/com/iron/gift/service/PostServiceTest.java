@@ -1,16 +1,13 @@
 package com.iron.gift.service;
 
-import com.iron.gift.entiry.Post;
+import com.iron.gift.entity.Post;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostEdit;
 import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -119,4 +116,28 @@ class PostServiceTest {
 		Assertions.assertEquals("제목 - 30", posts.get(0).getTitle());
 		Assertions.assertEquals("내용 - 30", posts.get(0).getContent());
 	}
+	@Test
+	@DisplayName("글 제목 수정")
+	void editPost() {
+		Post findPost = Post.builder()
+				.title("글작성 테스트제목")
+				.content("글작성 테스트내용")
+				.build();
+		postRepository.save(findPost);
+
+		PostEdit editPost = PostEdit.builder()
+				.title("글작성 제목 수정")
+				.content("글작성 내용 수정")
+				.build();
+		postService.editPost(findPost.getId(), editPost);
+
+		Post changePost = postRepository.findById(findPost.getId())
+				.orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + findPost.getId()));
+
+		Assertions.assertNotNull(changePost.getTitle());
+		Assertions.assertNotNull(changePost.getContent());
+		Assertions.assertEquals("글작성 제목 수정", changePost.getTitle());
+		Assertions.assertEquals("글작성 내용 수정", changePost.getContent());
+	}
+	
 }

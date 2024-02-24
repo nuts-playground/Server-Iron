@@ -1,6 +1,6 @@
 package com.iron.gift.repository;
 
-import com.iron.gift.entiry.Post;
+import com.iron.gift.entity.Post;
 import com.iron.gift.request.PostSearch;
 
 import java.util.List;

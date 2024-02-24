@@ -1,10 +1,10 @@
 package com.iron.gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iron.gift.entiry.Post;
+import com.iron.gift.entity.Post;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
-import org.hamcrest.Matchers;
+import com.iron.gift.request.PostEdit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,8 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -35,6 +35,8 @@ public class PostControllerTest {
 	@Autowired
 	private PostRepository postRepository;
 
+	private ObjectMapper objectMapper = new ObjectMapper();
+
 	@BeforeEach
 	void clean() {
 		postRepository.deleteAll();
@@ -45,7 +47,7 @@ public class PostControllerTest {
 	void helloWorldTest() throws Exception {
 
 		mockMvc.perform(get("/hello")
-						.accept(MediaType.APPLICATION_JSON)
+						.accept(APPLICATION_JSON)
 						.param("param", "World"))
 				.andDo(print())
 				.andExpect(status().isOk())
@@ -59,12 +61,11 @@ public class PostControllerTest {
 				.content("내용입니다.")
 				.build();
 
-		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(postCreate);
 
 		mockMvc.perform(post("/posts")
 						.content(json)
-						.contentType(MediaType.APPLICATION_JSON)
+						.contentType(APPLICATION_JSON)
 				)
 				.andExpect(status().isBadRequest())
 				.andExpect(jsonPath("$.code").value("400"))
@@ -86,7 +87,7 @@ public class PostControllerTest {
 
 		mockMvc.perform(post("/posts")
 						.content(json)
-						.contentType(MediaType.APPLICATION_JSON)
+						.contentType(APPLICATION_JSON)
 				)
 				.andExpect(status().isOk())
 				.andDo(print());
@@ -112,7 +113,7 @@ public class PostControllerTest {
 		postRepository.saveAll(requestPosts);
 
 		mockMvc.perform(get("/posts?page=1&size=10")
-						.contentType(MediaType.APPLICATION_JSON))
+						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()", is(10)))
 				.andExpect(jsonPath("$[0].id").value("30"))
@@ -137,12 +138,34 @@ public class PostControllerTest {
 		postRepository.saveAll(requestPosts);
 
 		mockMvc.perform(get("/posts?page=0&size=10")
-						.contentType(MediaType.APPLICATION_JSON))
+						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()", is(10)))
 				.andExpect(jsonPath("$[0].id").value("30"))
 				.andExpect(jsonPath("$[0].title").value("제목 - 30"))
 				.andExpect(jsonPath("$[0].content").value("내용 - 30"))
+				.andDo(print());
+
+	}
+
+	@Test
+	@DisplayName("글 수정")
+	void editPost() throws Exception {
+		Post post = Post.builder()
+				.title("원래 제목")
+				.content("원래 내용")
+				.build();
+		postRepository.save(post);
+
+		PostEdit editPost = PostEdit.builder()
+				.title("수정 제목")
+				.content("수정 내용")
+				.build();
+
+		mockMvc.perform(patch("/posts/{postId}", post.getId())    // PATCH /posts/{postId}
+						.contentType(APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(editPost)))
+				.andExpect(status().isOk())
 				.andDo(print());
 
 	}

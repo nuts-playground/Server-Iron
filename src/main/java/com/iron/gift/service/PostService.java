@@ -1,15 +1,16 @@
 package com.iron.gift.service;
 
-import com.iron.gift.entiry.Post;
+import com.iron.gift.entity.Post;
+import com.iron.gift.entity.PostEditor;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostEdit;
 import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,4 +47,26 @@ public class PostService {
 				.collect(Collectors.toList());
 	}
 
+	@Transactional
+	public Post editPost(Long id, PostEdit postEdit) {
+		Post findPost = postRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+
+		PostEditor.PostEditorBuilder editorBuilder = findPost.toEditor();
+
+
+		if (postEdit.getTitle() != null) {
+			editorBuilder.title(postEdit.getTitle());
+		}
+
+		if (postEdit.getContent() != null) {
+			editorBuilder.content(postEdit.getContent());
+		}
+
+		PostEditor postEditor = editorBuilder.build();
+
+		findPost.edit(postEditor);
+
+		return findPost;
+	}
 }

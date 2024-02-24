@@ -1,6 +1,7 @@
 package com.iron.gift.controller;
 
 import com.iron.gift.request.PostCreate;
+import com.iron.gift.request.PostEdit;
 import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import com.iron.gift.service.PostService;
@@ -34,6 +35,11 @@ public class PostController {
 	@GetMapping("/posts")
 	public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
 		return postService.getList(postSearch);
+	}
+
+	@PatchMapping("/posts/{postId}")
+	public PostResponse edit(@PathVariable(name = "postId") Long id, @RequestBody @Valid PostEdit postEdit ) {
+		return postService.editPost(id, postEdit).toResponse();
 	}
 }
 
