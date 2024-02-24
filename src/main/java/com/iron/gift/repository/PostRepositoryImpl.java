@@ -1,14 +1,13 @@
 package com.iron.gift.repository;
 
-import com.iron.gift.entiry.Post;
-import com.iron.gift.entiry.QPost;
+import com.iron.gift.entity.Post;
 import com.iron.gift.request.PostSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.iron.gift.entiry.QPost.*;
+import static com.iron.gift.entity.QPost.*;
 
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
