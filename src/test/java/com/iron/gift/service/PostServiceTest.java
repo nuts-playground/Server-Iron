@@ -1,29 +1,24 @@
 package com.iron.gift.service;
 
 import com.iron.gift.entity.Post;
+import com.iron.gift.exception.PostNotFound;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
 import com.iron.gift.request.PostEdit;
 import com.iron.gift.request.PostSearch;
 import com.iron.gift.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -57,6 +52,21 @@ class PostServiceTest {
 		Post findPost = postRepository.findAll().get(0);
 		Assertions.assertEquals("제목입니다.", findPost.getTitle());
 		Assertions.assertEquals("내용입니다.", findPost.getContent());
+	}
+
+	@Test
+	@DisplayName("글 1개 조회")
+	void getPostOne() {
+		Post post = Post.builder()
+				.title("제목")
+				.content("내용")
+				.build();
+		postRepository.save(post);
+
+		Assertions.assertThrows(PostNotFound.class, () -> {
+			postService.getPost(post.getId() + 1L);
+		});
+
 	}
 
 	@Test
@@ -115,7 +125,7 @@ class PostServiceTest {
 		postService.editPost(findPost.getId(), editPost);
 
 		Post changePost = postRepository.findById(findPost.getId())
-				.orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + findPost.getId()));
+				.orElseThrow(PostNotFound::new);
 
 		Assertions.assertNotNull(changePost.getTitle());
 		Assertions.assertNotNull(changePost.getContent());
@@ -139,7 +149,7 @@ class PostServiceTest {
 		postService.editPost(findPost.getId(), editPost);
 
 		Post changePost = postRepository.findById(findPost.getId())
-				.orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id=" + findPost.getId()));
+				.orElseThrow(PostNotFound::new);
 
 		Assertions.assertNotNull(changePost.getTitle());
 		Assertions.assertNotNull(changePost.getContent());
