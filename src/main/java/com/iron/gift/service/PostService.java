@@ -2,6 +2,7 @@ package com.iron.gift.service;
 
 import com.iron.gift.entity.Post;
 import com.iron.gift.entity.PostEditor;
+import com.iron.gift.exception.PostNotFound;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
 import com.iron.gift.request.PostEdit;
@@ -31,7 +32,7 @@ public class PostService {
 
 	public PostResponse getPost(Long id) {
 		Post post = postRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+				.orElseThrow(PostNotFound::new);
 
 		return PostResponse.builder()
 				.id(post.getId())
@@ -50,7 +51,7 @@ public class PostService {
 	@Transactional
 	public Post editPost(Long id, PostEdit postEdit) {
 		Post findPost = postRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+				.orElseThrow(PostNotFound::new);
 
 		PostEditor.PostEditorBuilder editorBuilder = findPost.toEditor();
 
@@ -68,5 +69,12 @@ public class PostService {
 		findPost.edit(postEditor);
 
 		return findPost;
+	}
+
+	public void deletePost(Long id) {
+		Post findPost = postRepository.findById(id)
+				.orElseThrow(PostNotFound::new);
+
+		postRepository.delete(findPost);
 	}
 }

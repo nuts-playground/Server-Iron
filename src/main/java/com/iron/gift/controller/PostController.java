@@ -1,5 +1,6 @@
 package com.iron.gift.controller;
 
+import com.iron.gift.exception.InvalidRequest;
 import com.iron.gift.request.PostCreate;
 import com.iron.gift.request.PostEdit;
 import com.iron.gift.request.PostSearch;
@@ -8,8 +9,6 @@ import com.iron.gift.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +22,7 @@ public class PostController {
 
 	@PostMapping("/posts")
 	public Long post(@RequestBody @Valid PostCreate postCreate) {
+		postCreate.validate();
 		return postService.write(postCreate);
 	}
 
@@ -38,8 +38,16 @@ public class PostController {
 	}
 
 	@PatchMapping("/posts/{postId}")
-	public PostResponse edit(@PathVariable(name = "postId") Long id, @RequestBody @Valid PostEdit postEdit ) {
+	public PostResponse edit(@PathVariable(name = "postId") Long id, @RequestBody @Valid PostEdit postEdit) {
 		return postService.editPost(id, postEdit).toResponse();
 	}
+
+	@DeleteMapping("/posts/{postId}")
+	public void delete(@PathVariable(name = "postId") Long id) {
+		postService.deletePost(id);
+	}
+
 }
+
+
 

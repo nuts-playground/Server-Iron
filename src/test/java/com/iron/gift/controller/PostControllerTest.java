@@ -11,14 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -100,6 +99,24 @@ public class PostControllerTest {
 	}
 
 	@Test
+	@DisplayName("글 1개 조회")
+	void getPostTest() throws Exception {
+		Post post = Post.builder()
+				.title("제목입니다.")
+				.content("내용입니다.")
+				.build();
+		postRepository.save(post);
+
+		mockMvc.perform(get("/posts/{postId}", post.getId())
+						.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(post.getId()))
+				.andExpect(jsonPath("$.title").value("제목입니다."))
+				.andExpect(jsonPath("$.content").value("내용입니다."))
+				.andDo(print());
+	}
+
+	@Test
 	@DisplayName("글 여러개 조회")
 	void getList() throws Exception {
 		List<Post> requestPosts = IntStream.range(1, 31)
@@ -168,5 +185,63 @@ public class PostControllerTest {
 				.andExpect(status().isOk())
 				.andDo(print());
 
+	}
+
+	@Test
+	@DisplayName("글 삭제")
+	void deletePost() throws Exception {
+		Post post = Post.builder()
+				.title("글제목")
+				.content("글내용")
+				.build();
+		postRepository.save(post);
+
+		mockMvc.perform(delete("/posts/{postId}", post.getId())
+						.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andDo(print());
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 글 조회")
+	void getNotFoundPost() throws Exception {
+		mockMvc.perform(delete("/posts/{postId}", 1L)
+						.contentType(APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andDo(print());
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 글 수정")
+	void editNotFoundPost() throws Exception {
+		PostEdit editPost = PostEdit.builder()
+				.title("수정 제목")
+				.content("수정 내용")
+				.build();
+
+		mockMvc.perform(patch("/posts/{postId}", 100L)    // PATCH /posts/{postId}
+						.contentType(APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(editPost)))
+				.andExpect(status().isNotFound())
+				.andDo(print());
+	}
+
+	@Test
+	@DisplayName("글 작성 시 제목에 금지어('바보')는 포함될 수 없다.")
+	void banWordsTest() throws Exception {
+		PostCreate postCreate = PostCreate.builder()
+				.title("바보입니다.")
+				.content("내용입니다.")
+				.build();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(postCreate);
+
+		mockMvc.perform(post("/posts")
+						.content(json)
+						.contentType(APPLICATION_JSON)
+				)
+				.andExpect(status().isBadRequest())
+				.andDo(print());
 	}
 }

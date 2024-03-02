@@ -1,6 +1,7 @@
 package com.iron.gift.request;
 
 import com.iron.gift.entity.Post;
+import com.iron.gift.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,4 +32,9 @@ public class PostCreate {
 				.build();
 	}
 
+	public void validate() {
+		if (title.contains("바보")) {
+			throw new InvalidRequest("title", "제목에 '바보'를 포함할 수 없습니다.");
+		}
+	}
 }
