@@ -197,9 +197,51 @@ public class PostControllerTest {
 		postRepository.save(post);
 
 		mockMvc.perform(delete("/posts/{postId}", post.getId())
-				.contentType(APPLICATION_JSON))
+						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andDo(print());
 	}
 
+	@Test
+	@DisplayName("존재하지 않는 글 조회")
+	void getNotFoundPost() throws Exception {
+		mockMvc.perform(delete("/posts/{postId}", 1L)
+						.contentType(APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andDo(print());
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 글 수정")
+	void editNotFoundPost() throws Exception {
+		PostEdit editPost = PostEdit.builder()
+				.title("수정 제목")
+				.content("수정 내용")
+				.build();
+
+		mockMvc.perform(patch("/posts/{postId}", 100L)    // PATCH /posts/{postId}
+						.contentType(APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(editPost)))
+				.andExpect(status().isNotFound())
+				.andDo(print());
+	}
+
+	@Test
+	@DisplayName("글 작성 시 제목에 금지어('바보')는 포함될 수 없다.")
+	void banWordsTest() throws Exception {
+		PostCreate postCreate = PostCreate.builder()
+				.title("바보입니다.")
+				.content("내용입니다.")
+				.build();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		String json = objectMapper.writeValueAsString(postCreate);
+
+		mockMvc.perform(post("/posts")
+						.content(json)
+						.contentType(APPLICATION_JSON)
+				)
+				.andExpect(status().isBadRequest())
+				.andDo(print());
+	}
 }
