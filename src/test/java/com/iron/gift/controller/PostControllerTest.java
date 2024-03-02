@@ -100,6 +100,24 @@ public class PostControllerTest {
 	}
 
 	@Test
+	@DisplayName("글 1개 조회")
+	void getPostTest() throws Exception {
+		Post post = Post.builder()
+				.title("제목입니다.")
+				.content("내용입니다.")
+				.build();
+		postRepository.save(post);
+
+		mockMvc.perform(get("/posts/{postId}", post.getId())
+						.contentType(APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.id").value(post.getId()))
+				.andExpect(jsonPath("$.title").value("제목입니다."))
+				.andExpect(jsonPath("$.content").value("내용입니다."))
+				.andDo(print());
+	}
+
+	@Test
 	@DisplayName("글 여러개 조회")
 	void getList() throws Exception {
 		List<Post> requestPosts = IntStream.range(1, 31)
@@ -184,4 +202,5 @@ public class PostControllerTest {
 				.andExpect(status().isOk())
 				.andDo(print());
 	}
+
 }
