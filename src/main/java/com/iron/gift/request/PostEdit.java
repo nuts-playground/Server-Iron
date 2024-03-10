@@ -15,6 +15,9 @@ public class PostEdit {
 	@NotBlank(message = "내용은 필수입력입니다.")
 	public String content;
 
+	public PostEdit() {
+	}
+
 	@Builder
 	public PostEdit(String title, String content) {
 		this.title = title;
