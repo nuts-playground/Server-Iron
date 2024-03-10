@@ -1,6 +1,6 @@
 package com.iron.gift.service;
 
-import com.iron.gift.entity.Post;
+import com.iron.gift.domain.Post;
 import com.iron.gift.exception.PostNotFound;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;

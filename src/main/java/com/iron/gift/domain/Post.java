@@ -1,4 +1,4 @@
-package com.iron.gift.entity;
+package com.iron.gift.domain;
 
 import com.iron.gift.response.PostResponse;
 import jakarta.persistence.*;

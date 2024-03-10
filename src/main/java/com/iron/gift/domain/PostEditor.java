@@ -1,4 +1,4 @@
-package com.iron.gift.entity;
+package com.iron.gift.domain;
 
 import lombok.Builder;
 import lombok.Getter;
