@@ -1,6 +1,6 @@
 package com.iron.gift.request;
 
-import com.iron.gift.entity.Post;
+import com.iron.gift.domain.Post;
 import com.iron.gift.exception.InvalidRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
@@ -18,6 +18,9 @@ public class PostCreate {
 
 	@NotBlank(message = "내용은 필수입력입니다.")
 	public String content;
+
+	public PostCreate() {
+	}
 
 	@Builder
 	public PostCreate(String title, String content) {

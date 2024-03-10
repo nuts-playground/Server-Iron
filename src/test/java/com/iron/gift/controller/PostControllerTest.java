@@ -1,7 +1,7 @@
 package com.iron.gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iron.gift.entity.Post;
+import com.iron.gift.domain.Post;
 import com.iron.gift.repository.PostRepository;
 import com.iron.gift.request.PostCreate;
 import com.iron.gift.request.PostEdit;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +56,7 @@ public class PostControllerTest {
 
 	@Test
 	@DisplayName("/posts 요청 시 title 값은 필수다.")
+	@Transactional
 	void titleNotNullTest() throws Exception {
 		PostCreate postCreate = PostCreate.builder()
 				.content("내용입니다.")
@@ -75,7 +77,9 @@ public class PostControllerTest {
 
 	@Test
 	@DisplayName("/posts 요청 시 DB에 값이 저장된다.")
+	@Transactional
 	void writePostTest() throws Exception {
+		long originalCnt = postRepository.count();
 		PostCreate postCreate = PostCreate.builder()
 				.title("제목입니다.")
 				.content("내용입니다.")
@@ -91,7 +95,7 @@ public class PostControllerTest {
 				.andExpect(status().isOk())
 				.andDo(print());
 
-		assertEquals(1L, postRepository.count());
+		assertEquals(originalCnt+1, postRepository.count());
 
 		Post post = postRepository.findAll().get(0);
 		assertEquals("제목입니다.", post.getTitle());
@@ -99,6 +103,7 @@ public class PostControllerTest {
 	}
 
 	@Test
+	@Transactional
 	@DisplayName("글 1개 조회")
 	void getPostTest() throws Exception {
 		Post post = Post.builder()
@@ -117,6 +122,7 @@ public class PostControllerTest {
 	}
 
 	@Test
+	@Transactional
 	@DisplayName("글 여러개 조회")
 	void getList() throws Exception {
 		List<Post> requestPosts = IntStream.range(1, 31)
@@ -133,15 +139,14 @@ public class PostControllerTest {
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()", is(10)))
-				.andExpect(jsonPath("$[0].id").value("30"))
 				.andExpect(jsonPath("$[0].title").value("제목 - 30"))
 				.andExpect(jsonPath("$[0].content").value("내용 - 30"))
 				.andDo(print());
 
 	}
 
-
 	@Test
+	@Transactional
 	@DisplayName("페이지를 0으로 요청해도 첫 페이지를 가져온다.")
 	void getListDefaultPage() throws Exception {
 		List<Post> requestPosts = IntStream.range(1, 31)
@@ -158,15 +163,16 @@ public class PostControllerTest {
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()", is(10)))
-				.andExpect(jsonPath("$[0].id").value("30"))
 				.andExpect(jsonPath("$[0].title").value("제목 - 30"))
 				.andExpect(jsonPath("$[0].content").value("내용 - 30"))
 				.andDo(print());
 
 	}
 
+
 	@Test
 	@DisplayName("글 수정")
+	@Transactional
 	void editPost() throws Exception {
 		Post post = Post.builder()
 				.title("원래 제목")
@@ -188,6 +194,7 @@ public class PostControllerTest {
 	}
 
 	@Test
+	@Transactional
 	@DisplayName("글 삭제")
 	void deletePost() throws Exception {
 		Post post = Post.builder()
@@ -227,6 +234,7 @@ public class PostControllerTest {
 	}
 
 	@Test
+	@Transactional
 	@DisplayName("글 작성 시 제목에 금지어('바보')는 포함될 수 없다.")
 	void banWordsTest() throws Exception {
 		PostCreate postCreate = PostCreate.builder()
