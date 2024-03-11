@@ -5,13 +5,21 @@
 
 === 요청
 
-include::{snippets}/index/http-request.adoc[]
-include::{snippets}/index/path-parameters.adoc[]
-include::{snippets}/index/request-fields.adoc[]
+include::{snippets}/post-inquery/http-request.adoc[]
+include::{snippets}/post-inquery/path-parameters.adoc[]
 
 === 응답
-include::{snippets}/index/http-response.adoc[]
-include::{snippets}/index/response-fields.adoc[]
+include::{snippets}/post-inquery/http-response.adoc[]
+include::{snippets}/post-inquery/response-fields.adoc[]
 
-=== CURL
-include::{snippets}/index/curl-request.adoc[]
+
+== 글 등록
+
+=== 요청
+
+include::{snippets}/post-create/http-request.adoc[]
+include::{snippets}/post-create/request-fields.adoc[]
+
+=== 응답
+include::{snippets}/post-create/http-response.adoc[]
+
