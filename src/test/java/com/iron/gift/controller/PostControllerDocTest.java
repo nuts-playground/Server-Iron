@@ -3,7 +3,7 @@ package com.iron.gift.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iron.gift.domain.Post;
 import com.iron.gift.repository.PostRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.iron.gift.request.PostCreate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,16 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,12 +39,6 @@ public class PostControllerDocTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .apply(documentationConfiguration(restDocumentation))
-                .build();
-    }
 
     @Test
     @DisplayName("글 단건 조회 테스트")
@@ -60,7 +54,41 @@ public class PostControllerDocTest {
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andDo(document("index"));
+                .andDo(document("index", pathParameters(
+                                parameterWithName("postId").description("게시글 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("게시글 ID"),
+                                fieldWithPath("title").description("게시글 TITLE"),
+                                fieldWithPath("content").description("게시글 CONTENT")
+                        )
+                ));
+
+    }
+
+    @Test
+    @DisplayName("글 등록")
+    void test2() throws Exception {
+        PostCreate request = PostCreate.builder()
+                .title("제목입니다.")
+                .content("내용입니다.")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+        this.mockMvc.perform(post("/posts")
+                        .contentType(APPLICATION_JSON)
+                        .accept(APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andDo(document("index",
+                        requestFields(
+                                fieldWithPath("title").description("게시글 TITLE"),
+                                fieldWithPath("content").description("게시글 CONTENT")
+                        )
+                ));
+
 
     }
 }
