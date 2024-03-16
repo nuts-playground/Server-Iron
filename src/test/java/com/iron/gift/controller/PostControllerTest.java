@@ -85,7 +85,6 @@ public class PostControllerTest {
 				.content("내용입니다.")
 				.build();
 
-		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(postCreate);
 
 		mockMvc.perform(post("/posts")
