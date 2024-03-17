@@ -5,6 +5,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 @RestController
 public class HelloController {
 
@@ -14,3 +19,5 @@ public class HelloController {
 		return "Hello " + param;
 	}
 }
+
+

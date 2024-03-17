@@ -1,9 +1,29 @@
 <script setup lang="ts">
+import axios from "axios";
+import { ref } from "vue";
+
+const posts = ref([]);
+
+axios.get("/api/posts?page=1&size=10").then((response) => {
+  response.data.forEach((post: any) => {
+    posts.value.push(post);
+  })
+});
 
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <ul>
+    <li v-for="post in posts" :key="post.id">
+      <div>
+        {{ post.title }}
+      </div>
+
+      <div>
+        {{ post.content }}
+      </div>
+    </li>
+
+
+  </ul>
 </template>
