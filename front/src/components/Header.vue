@@ -11,9 +11,11 @@ const handleSelect = (key: string, keyPath: string[]) => {
 </script>
 
 <template>
+
+
   <el-menu :default-active="activeIndex" class="el-menu-demo header" mode="horizontal" @select="handleSelect">
     <el-menu-item index="0">
-      <img style="width: 100px" src="#" alt="BK blog logo"/>
+      <img style="width: 100px" src="#" alt="로고 넣을 곳"/>
     </el-menu-item>
     <el-menu-item index="1">Home</el-menu-item>
     <el-sub-menu index="2">
@@ -26,6 +28,8 @@ const handleSelect = (key: string, keyPath: string[]) => {
 
 </template>
 <style scoped>
+
+
 .header {
   padding: 0;
   height: 60px;
