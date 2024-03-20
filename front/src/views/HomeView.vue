@@ -34,4 +34,43 @@ axios.get("/api/posts?page=1&size=10").then((response) => {
 </template>
 
 <style scoped lang="scss">
+ul {
+  list-style: none;
+  padding: 0;
+  li {
+    margin-bottom: 1.3rem;
+
+    .title {
+      a {
+        font-size: 1.2rem;
+        color: lightcoral;
+        text-decoration: none;
+      }
+
+      &:hover {
+        text-decoration: underline;
+        color: #ff7217
+      }
+
+
+    }
+    .content {
+      font-size: 0.9rem;
+      color: darkblue;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .sub {
+      margin-top: 4px;
+      font-size: 0.78rem;
+
+      .regDate {
+        margin-left: 10px;
+        color: cornflowerblue;
+        margin-left: 10px;
+      }
+    }
+  }
+}
 </style>
