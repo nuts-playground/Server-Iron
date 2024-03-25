@@ -2,18 +2,21 @@ package com.iron.gift.domain;
 
 import com.iron.gift.response.PostResponse;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Post {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	private String title;
 
 	@Lob

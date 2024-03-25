@@ -2,10 +2,10 @@ package com.iron.gift.service;
 
 import com.iron.gift.domain.Post;
 import com.iron.gift.exception.PostNotFound;
-import com.iron.gift.repository.PostRepository;
-import com.iron.gift.request.PostCreate;
-import com.iron.gift.request.PostEdit;
-import com.iron.gift.request.PostSearch;
+import com.iron.gift.repository.post.PostRepository;
+import com.iron.gift.request.post.PostCreate;
+import com.iron.gift.request.post.PostEdit;
+import com.iron.gift.request.post.PostSearch;
 import com.iron.gift.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

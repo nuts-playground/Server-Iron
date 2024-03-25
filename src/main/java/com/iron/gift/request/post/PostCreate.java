@@ -1,4 +1,4 @@
-package com.iron.gift.request;
+package com.iron.gift.request.post;
 
 import com.iron.gift.domain.Post;
 import com.iron.gift.exception.InvalidRequest;

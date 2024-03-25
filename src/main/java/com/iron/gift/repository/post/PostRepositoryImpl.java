@@ -1,7 +1,7 @@
-package com.iron.gift.repository;
+package com.iron.gift.repository.post;
 
 import com.iron.gift.domain.Post;
-import com.iron.gift.request.PostSearch;
+import com.iron.gift.request.post.PostSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

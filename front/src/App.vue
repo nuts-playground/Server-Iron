@@ -25,6 +25,7 @@ import Aside from "@/components/Aside.vue";
 
         <el-container>
           <el-main>
+
             <Content/>
           </el-main>
         </el-container>

@@ -1,4 +1,4 @@
-package com.iron.gift.request;
+package com.iron.gift.request.post;
 
 
 import lombok.Builder;
