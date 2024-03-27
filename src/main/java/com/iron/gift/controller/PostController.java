@@ -22,10 +22,16 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping("/foo")
-	public String foo(UserSession userSession) {
-		log.info("foo>>> : {}", userSession);
-		return "foo";
+	public Long foo(UserSession userSession) {
+		log.info("foo>>> : {}", userSession.id);
+		return userSession.id;
 	}
+
+	@GetMapping("/bar")
+	public String foo() {
+		return "인증이 필요없는 페이지";
+	}
+
 
 	@PostMapping("/posts")
 	public Long post(@RequestBody @Valid PostCreate request) {
