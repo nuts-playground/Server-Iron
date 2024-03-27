@@ -1,9 +1,9 @@
 package com.iron.gift.controller;
 
-import com.iron.gift.exception.InvalidRequest;
-import com.iron.gift.request.PostCreate;
-import com.iron.gift.request.PostEdit;
-import com.iron.gift.request.PostSearch;
+import com.iron.gift.config.data.UserSession;
+import com.iron.gift.request.post.PostCreate;
+import com.iron.gift.request.post.PostEdit;
+import com.iron.gift.request.post.PostSearch;
 import com.iron.gift.response.PostResponse;
 import com.iron.gift.service.PostService;
 import jakarta.validation.Valid;
@@ -21,10 +21,23 @@ public class PostController {
 
 	private final PostService postService;
 
+	@GetMapping("/foo")
+	public Long foo(UserSession userSession) {
+		log.info("foo>>> : {}", userSession.id);
+		return userSession.id;
+	}
+
+	@GetMapping("/bar")
+	public String foo() {
+		return "인증이 필요없는 페이지";
+	}
+
+
 	@PostMapping("/posts")
-	public Long post(@RequestBody @Valid PostCreate postCreate) {
-		postCreate.validate();
-		return postService.write(postCreate);
+	public Long post(@RequestBody @Valid PostCreate request) {
+
+		request.validate();
+		return postService.write(request);
 	}
 
 

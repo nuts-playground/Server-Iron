@@ -14,7 +14,11 @@ public abstract class GiftException extends RuntimeException{
 		super(message, cause);
 	}
 
-	public abstract int getStatusCode();
+    public GiftException() {
+
+    }
+
+    public abstract int getStatusCode();
 
 	public void addValidation(String field, String message) {
 		validation.put(field, message);

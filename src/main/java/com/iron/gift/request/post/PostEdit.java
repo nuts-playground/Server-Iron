@@ -1,4 +1,4 @@
-package com.iron.gift.request;
+package com.iron.gift.request.post;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

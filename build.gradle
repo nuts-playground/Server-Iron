@@ -34,7 +34,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	implementation 'com.h2database:h2'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
@@ -73,6 +75,10 @@ bootJar {
 		from "${asciidoctor.outputDir}"
 		into 'src/main/resources/static/docs'
 	}
+}
+
+jar {
+	enabled = false
 }
 
 //querydsl setting --- start

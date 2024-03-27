@@ -2,9 +2,9 @@ package com.iron.gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iron.gift.domain.Post;
-import com.iron.gift.repository.PostRepository;
-import com.iron.gift.request.PostCreate;
-import com.iron.gift.request.PostEdit;
+import com.iron.gift.repository.post.PostRepository;
+import com.iron.gift.request.post.PostCreate;
+import com.iron.gift.request.post.PostEdit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,7 +64,7 @@ public class PostControllerTest {
 
 		String json = objectMapper.writeValueAsString(postCreate);
 
-		mockMvc.perform(post("/posts")
+		mockMvc.perform(post("/api/posts")
 						.content(json)
 						.contentType(APPLICATION_JSON)
 				)
@@ -87,7 +87,7 @@ public class PostControllerTest {
 
 		String json = objectMapper.writeValueAsString(postCreate);
 
-		mockMvc.perform(post("/posts")
+		mockMvc.perform(post("/api/posts?")
 						.content(json)
 						.contentType(APPLICATION_JSON)
 				)
@@ -111,7 +111,7 @@ public class PostControllerTest {
 				.build();
 		postRepository.save(post);
 
-		mockMvc.perform(get("/posts/{postId}", post.getId())
+		mockMvc.perform(get("/api/posts/{postId}", post.getId())
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(post.getId()))
@@ -134,7 +134,7 @@ public class PostControllerTest {
 
 		postRepository.saveAll(requestPosts);
 
-		mockMvc.perform(get("/posts?page=1&size=10")
+		mockMvc.perform(get("/api/posts?page=1&size=10")
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()", is(10)))
@@ -158,7 +158,7 @@ public class PostControllerTest {
 
 		postRepository.saveAll(requestPosts);
 
-		mockMvc.perform(get("/posts?page=0&size=10")
+		mockMvc.perform(get("/api/posts?page=0&size=10")
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.length()", is(10)))
@@ -184,7 +184,7 @@ public class PostControllerTest {
 				.content("수정 내용")
 				.build();
 
-		mockMvc.perform(patch("/posts/{postId}", post.getId())    // PATCH /posts/{postId}
+		mockMvc.perform(patch("/api/posts/{postId}", post.getId())    // PATCH /posts/{postId}
 						.contentType(APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(editPost)))
 				.andExpect(status().isOk())
@@ -202,7 +202,7 @@ public class PostControllerTest {
 				.build();
 		postRepository.save(post);
 
-		mockMvc.perform(delete("/posts/{postId}", post.getId())
+		mockMvc.perform(delete("/api/posts/{postId}", post.getId())
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andDo(print());
@@ -211,7 +211,7 @@ public class PostControllerTest {
 	@Test
 	@DisplayName("존재하지 않는 글 조회")
 	void getNotFoundPost() throws Exception {
-		mockMvc.perform(delete("/posts/{postId}", 1L)
+		mockMvc.perform(delete("/api/posts/{postId}", 1L)
 						.contentType(APPLICATION_JSON))
 				.andExpect(status().isNotFound())
 				.andDo(print());
@@ -225,7 +225,7 @@ public class PostControllerTest {
 				.content("수정 내용")
 				.build();
 
-		mockMvc.perform(patch("/posts/{postId}", 100L)    // PATCH /posts/{postId}
+		mockMvc.perform(patch("/api/posts/{postId}", 100L)    // PATCH /posts/{postId}
 						.contentType(APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(editPost)))
 				.andExpect(status().isNotFound())
@@ -244,7 +244,7 @@ public class PostControllerTest {
 		ObjectMapper objectMapper = new ObjectMapper();
 		String json = objectMapper.writeValueAsString(postCreate);
 
-		mockMvc.perform(post("/posts")
+		mockMvc.perform(post("/api/posts")
 						.content(json)
 						.contentType(APPLICATION_JSON)
 				)

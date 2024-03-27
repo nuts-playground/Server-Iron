@@ -1,4 +1,4 @@
-package com.iron.gift.repository;
+package com.iron.gift.repository.post;
 
 import com.iron.gift.domain.Post;
 import org.springframework.data.jpa.repository.JpaRepository;

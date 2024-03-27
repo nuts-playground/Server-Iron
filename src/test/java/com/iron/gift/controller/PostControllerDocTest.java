@@ -2,8 +2,8 @@ package com.iron.gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iron.gift.domain.Post;
-import com.iron.gift.repository.PostRepository;
-import com.iron.gift.request.PostCreate;
+import com.iron.gift.repository.post.PostRepository;
+import com.iron.gift.request.post.PostCreate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +50,7 @@ public class PostControllerDocTest {
                 .build();
         postRepository.save(post);
 
-        this.mockMvc.perform(get("/posts/{postId}", post.getId())
+        this.mockMvc.perform(get("/api/posts/{postId}", post.getId())
                         .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -76,7 +76,7 @@ public class PostControllerDocTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        this.mockMvc.perform(post("/posts")
+        this.mockMvc.perform(post("/api/posts")
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .content(json))
