@@ -2,5 +2,4 @@
 
 GET http://localhost:8080/api/foo
 Content-Type: application/json
-Authorization: asdf
-
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.FgO-3gf-YnuGagR3fZ0xxXlexiNCLkbm1gs9Kfqzer0

@@ -1,1 +1,1 @@
-INSERT INTO `g_user` (name, email, password, create_at) VALUES ('테스트', 'test@gmail.com', '1234', now())
+INSERT INTO `g_user` (name, email, password, create_at) VALUES ('테스트1', 'test1@gmail.com', '1234', now())
