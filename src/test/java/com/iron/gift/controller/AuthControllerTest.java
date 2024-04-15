@@ -52,14 +52,14 @@ class AuthControllerTest {
 
         User user = User.builder()
                 .name("테스트")
-                .email("test@gmail")
+                .email("test@gmail.com")
                 .password("1234")
                 .build();
 
         userRepository.save(user);
 
         Login loginBuilde = Login.builder()
-                .email("test@gmail")
+                .email("test@gmail.com")
                 .password("1234")
                 .build();
 
