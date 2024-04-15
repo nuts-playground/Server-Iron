@@ -11,14 +11,11 @@ public class Unauthorized extends GiftException {
     private static final String MESSAGE = "인증이 필요합니다.";
 
     public Unauthorized() {
-        super();
-    }
-    public Unauthorized(String message) {
-        super(message);
+        super(MESSAGE);
     }
 
-    public Unauthorized(String message, Throwable cause) {
-        super(message, cause);
+    public Unauthorized(Throwable cause) {
+        super(MESSAGE, cause);
     }
 
 
