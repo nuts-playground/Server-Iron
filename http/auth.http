@@ -4,6 +4,12 @@ POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
-  "email": "byeongke@gmail.com",
+  "email": "test@gmail.com",
   "password": "1234"
 }
+
+### 인증 페이지 요청
+
+GET http://localhost:8080/api/foo
+Content-Type: application/json
+Cookie: SESSION=sdfds
