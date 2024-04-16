@@ -1,6 +1,7 @@
 package com.iron.gift.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iron.gift.crypto.PasswordEncoder;
 import com.iron.gift.domain.Session;
 import com.iron.gift.domain.User;
 import com.iron.gift.repository.SessionRepository;
@@ -48,22 +49,24 @@ class AuthControllerTest {
 
     @Test
     @DisplayName("로그인 성공")
-    void test() throws Exception {
+    void signinSuccess() throws Exception {
+        PasswordEncoder encoder = new PasswordEncoder();
+        String encryptedPassword = encoder.encrypt("1234");
 
         User user = User.builder()
                 .name("테스트")
                 .email("test@gmail.com")
-                .password("1234")
+                .password(encryptedPassword)
                 .build();
 
         userRepository.save(user);
 
-        Login loginBuilde = Login.builder()
+        Login login = Login.builder()
                 .email("test@gmail.com")
                 .password("1234")
                 .build();
 
-        String json = objectMapper.writeValueAsString(loginBuilde);
+        String json = objectMapper.writeValueAsString(login);
 
         mockMvc.perform(post("/auth/login")
                         .contentType(APPLICATION_JSON)
@@ -77,12 +80,14 @@ class AuthControllerTest {
     @Test
     @DisplayName("로그인 후 세션 생성")
     @Transactional
-    void test2() throws Exception {
+    void createSessionTestAfterLogin() throws Exception {
+        PasswordEncoder encoder = new PasswordEncoder();
+        String encryptedPassword = encoder.encrypt("1234");
 
         User user = User.builder()
                 .name("테스트")
                 .email("test@gmail")
-                .password("1234")
+                .password(encryptedPassword)
                 .build();
 
         userRepository.save(user);
