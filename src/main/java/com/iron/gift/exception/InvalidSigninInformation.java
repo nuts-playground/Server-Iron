@@ -10,7 +10,7 @@ public class InvalidSigninInformation extends GiftException {
         super(message);
     }
     public InvalidSigninInformation() {
-        super("이메일과 비밀번호를 입력해 주세요.");
+        super(MESSAGE);
     }
 
     @Override

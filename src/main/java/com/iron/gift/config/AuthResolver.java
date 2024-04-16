@@ -23,7 +23,7 @@ import java.util.Base64;
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
     private final SessionRepository sessionRepository;
-    private static final String KEY = "aHiHalAgrJyNYYsAODsiHh2oCgSYcpZUrAxpLiq84Ns=";
+    private final AppConfig appConfig;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -37,7 +37,7 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
             throw new Unauthorized();
         }
 
-        byte[] decodedKey = Base64.getDecoder().decode(KEY);
+        byte[] decodedKey = Base64.getDecoder().decode(appConfig.getJwtKey());
         SecretKeySpec originKey = new SecretKeySpec(decodedKey, "HMACSHA256");
 
         try {
